@@ -1,0 +1,56 @@
+Команда BEEGEEK планирует выпустить свой новый курс 08.11.2022 ровно в 12:00.
+Напишите программу, которая принимает на вход текущие дату и время и определяет, сколько времени осталось до выхода курса.
+Программа должна вывести текст с указанием количества дней и часов, оставшихся до выхода курса, в следующем формате:
+До выхода курса осталось: <кол-во дней> дней и <кол-во часов> часов
+Если в данном случае количество часов равно нулю, то вывести нужно только дни.
+Если количество дней равно нулю, то вывести нужно только часы и минуты в следующем формате:
+До выхода курса осталось: <кол-во часов> часов и <кол-во минут> минут
+Если в данном случае количество минут равно нулю, то вывести нужно только часы. Аналогично, если количество часов равно нулю, то вывести нужно только минуты.
+Если введенные дата и время больше либо равны 08.11.2022 12:00, программа должна вывести текст: 
+Курс уже вышел!
+Примечание 1. Программа должна подбирать правильную форму для существительных «день» и «минута». 
+
+РЕШЕНИЕ:
+
+from datetime import *
+
+
+def choose_plural(amount, declensions):
+    dict_ends = {
+        0: 2, 1: 0, 2: 1, 3: 1, 4: 1, 5: 2, 6: 2, 7: 2, 8: 2, 9: 2, 10: 2, 11: 2, 12: 2, 13: 2, 14: 2, 15: 2, 16: 2, 17: 2, 18: 2, 19: 2}
+
+    if amount % 100 <= 19:
+        return f'{amount} {declensions[dict_ends[amount % 100]]}'
+    elif amount % 10 == 0 or amount % 10 in range(5, 10):
+        return f'{amount} {declensions[2]}'
+    elif amount % 10 == 1:
+        return f'{amount} {declensions[0]}'
+    elif amount % 10 in [2, 3, 4]:
+        return f'{amount} {declensions[1]}'
+
+
+stamp = '%d.%m.%Y %H:%M'
+declensions_days = ('день', 'дня', 'дней')
+declensions_hours = ('час', 'часа', 'часов')
+declensions_minutes = ('минута', 'минуты', 'минут')
+
+release_date = datetime.strptime('08.11.2022 12:00', stamp)
+current_date = datetime.strptime(input(), stamp)
+
+
+if current_date >= release_date:
+    print('Курс уже вышел!')
+else:
+    delta = release_date - current_date
+    print('До выхода курса осталось: ', end='')
+
+    if delta.days != 0:
+        print(choose_plural(delta.days, declensions_days), end=' ')
+    if delta.days != 0 and delta.seconds // 3600 != 0:
+        print('и', end=' ')
+    if delta.seconds // 3600 != 0:
+        print(choose_plural(delta.seconds // 3600, declensions_hours), end=' ')
+    if (delta.seconds - delta.seconds // 3600 * 3600) // 60 != 0 and delta.days == 0 and delta.seconds // 3600 != 0:
+        print('и', end=' ')
+    if (delta.seconds - delta.seconds // 3600 * 3600) // 60 != 0 and delta.days == 0:
+        print(choose_plural((delta.seconds - delta.seconds // 3600 * 3600) // 60, declensions_minutes), end='')
