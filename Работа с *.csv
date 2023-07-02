@@ -1,0 +1,39 @@
+Дима очень хочет поесть, но денег у него мало.
+Помогите ему определить самый дешевый продукт, а также магазин, в котором он продается.
+Вам доступен файл prices.csv, который содержит информацию о ценах продуктов в различных магазинах.
+В первом столбце записано название магазина, а в последующих — цена на соответствующий товар в этом магазине/
+Напишите программу, которая определяет и выводит самый дешевый продукт и название магазина, в котором он продается, в следующем формате:
+<название продукта>: <название магазина>
+Если имеется несколько самых дешевых товаров, то следует вывести тот товар, чье название меньше в лексикографическом сравнении.
+Если один товар продается в нескольких магазинах по одной минимальной цене, то следует вывести тот магазин, чье название меньше в лексикографическом сравнении.
+
+РЕШЕНИЕ:
+import csv
+
+
+with open('prices.csv', encoding='utf-8') as file:
+    reader = list(csv.DictReader(file, delimiter=';'))
+
+    answer = []
+
+    #print(reader)
+    for shop in reader:
+        shops = shop['Магазин']
+        min_price = min(list(shop.items())[1:], key=lambda x: int(x[1]))
+        if list(shop.values())[1:].count(min_price[1]) == 1:
+            answer.append((min_price[0], shops, min_price[1]))
+        else:
+            for k, v in shop.items():
+                if v == min_price[1]:
+                    answer.append((k, shops, v))
+
+    min_min_price = min(answer, key=lambda x: int(x[2]))[2]
+
+    min_price_elem = list(filter(lambda x: x if x[2] == min_min_price else False, answer))
+
+    if len(min_price_elem) == 1:
+        print(f'{min_price_elem[0]}: {min_price_elem[1]}')
+    else:
+        sort_1 = sorted(min_price_elem, key=lambda x: x[1])
+        sort_2 = sorted(sort_1, key=lambda x: x[0])
+        print(f'{sort_2[0][0]}: {sort_2[0][1]}')
