@@ -1,0 +1,29 @@
+На вход программе подаются два натуральных числа n и m. Напишите программу, которая создает матрицу размером n×m заполнив её "змейкой" в соответствии с образцом.
+
+РЕШЕНИЕ:
+n = [int(i) for i in input().split()]
+k = 1
+mass = [[0 for _ in range(n[1])] for _ in range(n[0])]
+flag = True
+i, j = 0, 0
+while i <= n[0] - 1:
+    if flag == False:
+        break
+    while j <= n[1] - 1:
+        mass[i][j] = k
+        j += 1
+        k += 1
+    i += 1
+    if k >= n[0] * n[1]:
+        flag = False
+        break
+    while j != 0:
+        j -= 1
+        mass[i][j] = k
+        k += 1
+    i += 1
+
+for row in mass:
+    for elem in row:
+        print(str(elem).ljust(len(str(n[0] * n[1])) + 1), end='')
+    print()
