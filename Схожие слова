@@ -1,0 +1,14 @@
+Напишите программу, которая находит все схожие слова для заданного слова. Слова называются схожими, если имеют одинаковое количество и расположение гласных букв. При этом сами гласные могут различаться.
+
+РЕШЕНИЕ:
+word = input()
+while word[-1] not in 'ауоыиэяюёе':
+    word = word[:-1]
+words = [input() for _ in range(int(input()))]
+for w in words:
+    new_w = w
+    while w[-1] not in 'ауоыиэяюёе':
+        w = w[:-1]
+        
+    if list(map(lambda c: True if c in 'ауоыиэяюёе' else False, w)) == list(map(lambda c: True if c in 'ауоыиэяюёе' else False, word)):
+        print(new_w)
