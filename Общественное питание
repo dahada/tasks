@@ -1,0 +1,17 @@
+Напишите программу, которая определяет все виды заведений и для каждого вида находит самое большое заведение этого вида (имеет наибольшее количество посадочных мест). Программа должна вывести все виды заведений в лексикографическом порядке, указав для каждого самое большое заведение и количество посадочных мест в нем. Данные о заведениях должны быть расположены каждые на отдельной строке, в следующем формате:
+
+<вид заведения>: <название заведения>, <количество посадочных мест>
+
+РЕШЕНИЕ:
+import json
+
+
+with open('food_services.json', encoding='utf-8') as output_file:
+    reader = json.load(output_file)
+    type_of_place = dict()
+    num_name = dict()
+    for elem in reader:
+        type_of_place[elem['TypeObject']] = type_of_place.get(elem['TypeObject'], []) + [(elem['Name'], elem['SeatsCount'])]
+
+    for elem in sorted(type_of_place):
+        print(f'{elem}: {max(type_of_place[elem], key=lambda x: x[1])[0]}, {max(type_of_place[elem], key=lambda x: x[1])[1]}')
