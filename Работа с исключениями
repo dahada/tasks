@@ -1,0 +1,54 @@
+Назовем пароль хорошим, если:
+- его длина равна 9 или более символам;
+- в нем присутствуют большие и маленькие буквы любого алфавита;
+- в нем имеется хотя бы одна цифра.
+Напишите программу, которая требует ввода нового пароля до тех пор, пока не будет введен хороший.
+Для каждого введенного пароля программа должна вывести текст:
+LengthError, если длина введенного пароля меньше 9 символов
+LetterError, если в нем все буквы имеют одинаковый регистр либо отсутствуют
+DigitError, если в нем нет ни одной цифры
+Success!, если введенный пароль хороший
+После ввода хорошего пароля все последующие пароли должны игнорироваться.
+
+РЕШЕНИЕ:
+import sys
+
+
+class PasswordError(Exception):
+    pass
+
+class LengthError(PasswordError):
+    pass
+
+class LetterError(PasswordError):
+    pass
+
+class DigitError(PasswordError):
+    pass
+
+
+def is_good_password(string):
+    try:
+        if len(string.strip('\n')) < 9:
+            raise LengthError
+        elif string.strip('\n').islower() or string.strip('\n').isupper() or string.strip('\n').isdigit() or not(any([c.isalnum() for c in string.strip('\n')])):
+            raise LetterError
+        elif string.strip('\n').isalpha():
+            raise DigitError
+        else:
+            return 'Success!'
+    except LengthError:
+        return 'LengthError'
+    except LetterError:
+        return 'LetterError'
+    except DigitError:
+        return 'DigitError'
+
+flag = False
+
+for pswd in sys.stdin:
+    if flag:
+        continue
+    print(is_good_password(pswd))
+    if is_good_password(pswd) == 'Success!':
+        flag = True
