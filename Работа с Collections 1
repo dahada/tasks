@@ -1,0 +1,28 @@
+У Тимура имеется немало друзей из других городов или стран, которые часто приезжают к нему в гости с целью увидеться и развлечься.
+Чтобы не забыть ни об одной встрече, Тимур записывает имена и фамилии друзей в csv файл, дополнительно указывая для каждого дату и время встречи.
+Вам доступен этот файл, имеющий название meetings.csv, в котором в первом столбце записана фамилия, во втором — имя, в третьем — дата в формате DD.MM.YYYY , в четвертом — время в формате HH:MM.
+Напишите программу, которая выводит фамилии и имена друзей Тимура, предварительно отсортировав их по дате и времени встречи от самой ранней до самой поздней.
+Фамилии и имена должны быть расположены каждые на отдельной строке.
+
+РЕШЕНИЕ:
+from collections import namedtuple
+from datetime import datetime
+import csv
+
+
+with open('meetings.csv', 'r', encoding='utf-8') as f:
+    rows = list(csv.reader(f))
+
+    fields = rows[0]
+    Person = namedtuple('Person', field_names=fields)
+    del rows[0]
+
+    new_dict = []
+
+    for row in rows:
+        person = Person._make(row)
+        meet_time = datetime.strptime(f'{person.meeting_date} {person.meeting_time}', '%d.%m.%Y %H:%M')
+        new_dict.append({'surname': person.surname, 'name': person.name, 'meeting_datetime': meet_time})
+
+    for elem in sorted(new_dict, key=lambda x: x['meeting_datetime']):
+        print(f'{elem["surname"]} {elem["name"]}')
